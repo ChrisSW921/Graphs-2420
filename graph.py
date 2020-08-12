@@ -50,26 +50,31 @@ class Graph():
         print("")
 
     def dijkstra_shortest_path(self, src, dest=None):
-        for v in self.vertices.values():
-            v.dist = math.inf
-            v.visited = False
-        self.vertices[src].distance = 0
-        while False in [x.visited for x in self.vertices.values()]:
-            current_searchable = []
-            for vertex in self.vertices.values():
-                if not vertex.visited:
-                    current_searchable.append(vertex)
-            distances = [x.distance for x in current_searchable]
-            for vertex in current_searchable:
-                if vertex.distance == min(distances):
-                    node_to_visit = vertex
-                    node_to_visit.visited = True
-                    adjacent = node_to_visit.get_neighbors()
-                    for neighbor in adjacent:
-                        if (node_to_visit.distance + node_to_visit.edges[neighbor]) < neighbor.distance:
-                            neighbor.distance = node_to_visit.distance + node_to_visit.edges[neighbor]
-        for each in self.vertices.values():
-            print(f"{each.label} {each.distance}")
+
+        def find_all_shortest(start):
+            for v in self.vertices.values():
+                v.dist = math.inf
+                v.visited = False
+            self.vertices[start].distance = 0
+            while False in [x.visited for x in self.vertices.values()]:
+                current_searchable = []
+                for vertex in self.vertices.values():
+                    if not vertex.visited:
+                        current_searchable.append(vertex)
+                distances = [x.distance for x in current_searchable]
+                for vertex in current_searchable:
+                    if vertex.distance == min(distances):
+                        node_to_visit = vertex
+                        node_to_visit.visited = True
+                        adjacent = node_to_visit.get_neighbors()
+                        for neighbor in adjacent:
+                            if (node_to_visit.distance + node_to_visit.edges[neighbor]) < neighbor.distance:
+                                neighbor.distance = node_to_visit.distance + node_to_visit.edges[neighbor]
+            labels = [x.label for x in self.vertices.values()]
+            distances = [x.distance for x in self.vertices.values()]
+            return dict(zip(labels, distances))
+
+        print(find_all_shortest(src)["F"])
 
 
 
@@ -102,5 +107,5 @@ g.add_edge("E", "C", 7)
 g.add_edge("E", "D", 3)
 
 g.add_edge("F", "E", 3)
-print(g.get_weight("A", ""))
+
 g.dijkstra_shortest_path("A")
