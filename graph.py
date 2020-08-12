@@ -36,7 +36,12 @@ class Graph():
 
 
     def get_weight(self, src, dest):
-        print("")
+        neighbors = self.vertices[src].get_neighbors()
+        for neighbor in neighbors:
+            if neighbor.label == dest:
+                return self.vertices[src].edges[self.vertices[dest]]
+        return math.inf
+
 
     def dfs(self, starting_vertex):
         print("")
@@ -49,25 +54,19 @@ class Graph():
             v.dist = math.inf
             v.visited = False
         self.vertices[src].distance = 0
-
         while False in [x.visited for x in self.vertices.values()]:
             current_searchable = []
             for vertex in self.vertices.values():
                 if not vertex.visited:
                     current_searchable.append(vertex)
             distances = [x.distance for x in current_searchable]
-            print(distances)
-            print([x.label for x in current_searchable])
             for vertex in current_searchable:
                 if vertex.distance == min(distances):
                     node_to_visit = vertex
                     node_to_visit.visited = True
                     adjacent = node_to_visit.get_neighbors()
                     for neighbor in adjacent:
-                        print("Here1")
-                        print([x.label for x in adjacent])
                         if (node_to_visit.distance + node_to_visit.edges[neighbor]) < neighbor.distance:
-                            print("Here")
                             neighbor.distance = node_to_visit.distance + node_to_visit.edges[neighbor]
         for each in self.vertices.values():
             print(f"{each.label} {each.distance}")
@@ -103,5 +102,5 @@ g.add_edge("E", "C", 7)
 g.add_edge("E", "D", 3)
 
 g.add_edge("F", "E", 3)
-
+print(g.get_weight("A", ""))
 g.dijkstra_shortest_path("A")
