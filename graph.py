@@ -128,33 +128,33 @@ class Graph():
         for item in matrix[src]:
             if item > 0:
                 paths.append([src, matrix[src].index(item)])
-        print(f" Paths: {paths}")
         print(matrix)
         cool_paths = self.recurse(matrix, paths)
+
 
     def recurse(self, matrix, paths, check=[]):
         temp_paths = []
         check_paths = []
         continues = False
-        if not check:
-            check = paths
+
         for item in check:
             temp_paths.append(item)
-        print(f"Temp paths after adding {temp_paths}")
-        for x in matrix[item[-1]]:
-            if x > 0:
-                temp_list = item.copy()
-                temp_list.append(matrix[item[-1]].index(x))
-                check_paths.append(temp_list)
-                print(f"Check paths {check_paths}")
-                continues = True
+        for item in paths:
+            temp_paths.append(item)
+
+        for item in paths:
+            for x in matrix[item[-1]]:
+                if x > 0:
+                    temp_list = item.copy()
+                    temp_list.append(matrix[item[-1]].index(x))
+                    check_paths.append(temp_list)
+                    continues = True
+        print(f"Temp Paths {temp_paths}")
         if continues:
-            print("Continued")
-            self.recurse(matrix, temp_paths, check_paths)
+            self.recurse(matrix, check_paths, temp_paths)
         else:
-            print(f"done")
-        #print(temp_paths)
-        #return temp_paths
+            return temp_paths
+
 
 
 
@@ -208,4 +208,4 @@ g.add_edge("F", "E", 3)
 #
 # g.add_edge("E", "F", 1.0)
 print(g.dijkstra_shortest_path("A"))
-print(g.get_all_edges())
+#print(g.get_all_edges())
