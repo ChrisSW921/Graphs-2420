@@ -75,19 +75,29 @@ class Graph():
         return self.dfs_list
 
     def get_all_edges(self):
+        """Return all edges in graph"""
         all_edges = {}
         for vertice in self.vertices.values():
             for vert in vertice.edges.keys():
                 all_edges[(vertice.label, vert.label)] = vertice.edges[vert]
         return all_edges
 
-    def find_path(self, dest, short_paths, all_edges):
-        start = ""
-        for key in short_paths.keys():
-            if short_paths[key] == 0:
-                start = key
-        if short_paths[dest] == math.inf:
-            return []
+    # def path(self, end, start, all, lyst=[]):
+    #     if
+    #
+    # def find_path(self, dest, short_paths, all_edges):
+    #     start = ""
+    #     temp_path = [dest]
+    #     all_paths = []
+    #     edge_letters = all_edges.keys()
+    #     if short_paths[dest] == math.inf:
+    #         return []
+    #     for key in short_paths.keys():
+    #         if short_paths[key] == 0:
+    #             start = key
+
+
+
 
 
 
@@ -122,11 +132,11 @@ class Graph():
         keys = all_paths.keys()
         values = all_paths.values()
         no_dest = {}
-        if dest:
-            return (all_paths[dest], self.find_path(dest, all_paths, all_edges))
-        else:
-            for key in keys:
-                no_dest[key] = (all_paths[key], self.find_path(key, all_paths, all_edges))
+        # if dest:
+        #     return (all_paths[dest], self.find_path(dest, all_paths, all_edges))
+        # else:
+        #     for key in keys:
+        #         no_dest[key] = (all_paths[key], self.find_path(key, all_paths, all_edges))
         return all_paths
 
 
