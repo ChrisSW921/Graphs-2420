@@ -82,25 +82,6 @@ class Graph():
                 all_edges[(vertice.label, vert.label)] = vertice.edges[vert]
         return all_edges
 
-    # def path(self, end, start, all, lyst=[]):
-    #     if
-    #
-    # def find_path(self, dest, short_paths, all_edges):
-    #     start = ""
-    #     temp_path = [dest]
-    #     all_paths = []
-    #     edge_letters = all_edges.keys()
-    #     if short_paths[dest] == math.inf:
-    #         return []
-    #     for key in short_paths.keys():
-    #         if short_paths[key] == 0:
-    #             start = key
-
-
-
-
-
-
     def find_all_shortest(self, start):
         """Helper function"""
         for v in self.vertices.values():
@@ -132,12 +113,50 @@ class Graph():
         keys = all_paths.keys()
         values = all_paths.values()
         no_dest = {}
-        # if dest:
-        #     return (all_paths[dest], self.find_path(dest, all_paths, all_edges))
-        # else:
-        #     for key in keys:
-        #         no_dest[key] = (all_paths[key], self.find_path(key, all_paths, all_edges))
-        return all_paths
+
+        coded = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5}
+
+        matrix = [[0.0 for x in range(len(self.vertices))] for x in range(len(self.vertices))]
+
+        for item in list(all_edges.keys()):
+            matrix[coded[item[0]]][coded[item[1]]] = all_edges[item]
+        print(all_paths)
+        self.dij(coded[src], matrix, all_paths, dest)
+
+    def dij(self, src, matrix, all_paths, dest):
+        paths = []
+        for item in matrix[src]:
+            if item > 0:
+                paths.append([src, matrix[src].index(item)])
+        print(f" Paths: {paths}")
+        print(matrix)
+        cool_paths = self.recurse(matrix, paths)
+
+    def recurse(self, matrix, paths, check=[]):
+        temp_paths = []
+        check_paths = []
+        continues = False
+        if not check:
+            check = paths
+        for item in check:
+            temp_paths.append(item)
+        print(f"Temp paths after adding {temp_paths}")
+        for x in matrix[item[-1]]:
+            if x > 0:
+                temp_list = item.copy()
+                temp_list.append(matrix[item[-1]].index(x))
+                check_paths.append(temp_list)
+                print(f"Check paths {check_paths}")
+                continues = True
+        if continues:
+            print("Continued")
+            self.recurse(matrix, temp_paths, check_paths)
+        else:
+            print(f"done")
+        #print(temp_paths)
+        #return temp_paths
+
+
 
 
 
