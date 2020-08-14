@@ -27,12 +27,18 @@ class Graph():
 
     def add_vertex(self, label):
         """Add a vertex to graph"""
+        if not (isinstance(label, str)):
+            raise ValueError
         self.vertices[label] = Vertex(label)
         self.size += 1
         return self
 
     def add_edge(self, src, dest, w):
         """Add an edge to graph"""
+        if src not in self.vertices.keys() or dest not in self.vertices.keys():
+            raise ValueError
+        if not isinstance(w, float):
+            raise ValueError
         src_vertex = self.vertices[src]
         dest_vertex = self.vertices[dest]
         src_vertex.addEdgeTo(dest_vertex, w)
@@ -41,6 +47,8 @@ class Graph():
 
     def get_weight(self, src, dest):
         """Return weight of edge"""
+        if src not in self.vertices.keys() or dest not in self.vertices.keys():
+            raise ValueError
         neighbors = self.vertices[src].get_neighbors()
         for neighbor in neighbors:
             if neighbor.label == dest:
@@ -67,6 +75,8 @@ class Graph():
 
     def dfs(self, starting_vertex):
         """dfs"""
+        if starting_vertex not in self.vertices.keys():
+            raise ValueError
         starting_vertex = self.vertices[starting_vertex]
         for vertice in self.vertices.values():
             vertice.visited = False
@@ -121,15 +131,17 @@ class Graph():
         for item in list(all_edges.keys()):
             matrix[coded[item[0]]][coded[item[1]]] = all_edges[item]
         print(all_paths)
+
         if dest:
             letter_path = self.dij(coded[src], matrix, all_paths, dest)
             return (all_paths[dest], letter_path)
         else:
             for item in self.vertices.keys():
-                no_dest[item] = (all_paths[item])
-
-
-
+                if all_paths[item] in [0, math.inf]:
+                    no_dest[item] = (all_paths[item], [])
+                else:
+                    no_dest[item] = (all_paths[item], self.dij(coded[src], matrix, all_paths, item))
+            return no_dest
 
     def clean(self, lyst, dest):
         coded = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5}
@@ -156,7 +168,6 @@ class Graph():
                 letters = [back_coded[x] for x in path]
                 letters.reverse()
                 return letters
-
 
     def dij(self, src, matrix, all_paths, dest):
         paths = []
@@ -193,12 +204,6 @@ class Graph():
         else:
             return temp_paths
 
-
-
-
-
-
-
     def __str__(self):
         """String function"""
         returned_string = ""
@@ -224,19 +229,19 @@ g.add_vertex("D")
 g.add_vertex("E")
 g.add_vertex("F")
 
-g.add_edge("A", "B", 2)
-g.add_edge("A", "F", 9)
+g.add_edge("A", "B", 2.0)
+g.add_edge("A", "F", 9.0)
 
-g.add_edge("B", "F", 6)
-g.add_edge("B", "D", 15)
-g.add_edge("B", "C", 8)
+g.add_edge("B", "F", 6.0)
+g.add_edge("B", "D", 15.0)
+g.add_edge("B", "C", 8.0)
 
-g.add_edge("C", "D", 1)
+g.add_edge("C", "D", 1.0)
 
-g.add_edge("E", "C", 7)
-g.add_edge("E", "D", 3)
+g.add_edge("E", "C", 7.0)
+g.add_edge("E", "D", 3.0)
 
-g.add_edge("F", "E", 3)
+g.add_edge("F", "E", 3.0)
 # g.add_edge("A", "B", 1.0)
 # g.add_edge("A", "C", 1.0)
 #
@@ -245,5 +250,5 @@ g.add_edge("F", "E", 3)
 # g.add_edge("C", "E", 1.0)
 #
 # g.add_edge("E", "F", 1.0)
-print(g.dijkstra_shortest_path("A", "B"))
-#print(g.get_all_edges())
+print(g.dijkstra_shortest_path("F"))
+
