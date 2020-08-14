@@ -18,7 +18,8 @@ class Vertex:
         return self.edges.keys()
 
 
-class Graph():
+class Graph:
+    """Graph class"""
     def __init__(self):
         self.edge_count = 0
         self.vertices = dict()
@@ -37,7 +38,7 @@ class Graph():
         """Add an edge to graph"""
         if src not in self.vertices.keys() or dest not in self.vertices.keys():
             raise ValueError
-        if not isinstance(w, float):
+        if isinstance(w, str):
             raise ValueError
         src_vertex = self.vertices[src]
         dest_vertex = self.vertices[dest]
@@ -66,6 +67,8 @@ class Graph():
 
     def bfs(self, starting_vertex):
         """bfs"""
+        if starting_vertex not in self.vertices.keys():
+            raise ValueError
         starting_vertex = self.vertices[starting_vertex]
         for vertice in self.vertices.values():
             vertice.visited = False
@@ -118,10 +121,10 @@ class Graph():
 
     def dijkstra_shortest_path(self, src, dest=None):
         """Shortest path algorithm"""
+        if src not in self.vertices.keys():
+            raise ValueError
         all_paths = self.find_all_shortest(src)
         all_edges = self.get_all_edges()
-        keys = all_paths.keys()
-        values = all_paths.values()
         no_dest = {}
 
         coded = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5}
@@ -130,7 +133,6 @@ class Graph():
 
         for item in list(all_edges.keys()):
             matrix[coded[item[0]]][coded[item[1]]] = all_edges[item]
-        print(all_paths)
 
         if dest:
             letter_path = self.dij(coded[src], matrix, all_paths, dest)
@@ -144,6 +146,7 @@ class Graph():
             return no_dest
 
     def clean(self, lyst, dest):
+        """Clean function"""
         coded = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5}
         desti = coded[dest]
         cleaned = []
@@ -153,7 +156,7 @@ class Graph():
         return cleaned
 
     def letter_path(self, lyst, dest, low_num):
-        coded = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5}
+        """Convert to letters"""
         back_coded = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F"}
         edges = self.get_all_edges()
         for path in lyst:
@@ -170,8 +173,8 @@ class Graph():
                 return letters
 
     def dij(self, src, matrix, all_paths, dest):
+        """Helper function"""
         paths = []
-        coded = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5}
         for item in matrix[src]:
             if item > 0:
                 paths.append([src, matrix[src].index(item)])
@@ -183,6 +186,7 @@ class Graph():
         return letters
 
     def recurse(self, matrix, paths, check=[]):
+        """Helper function"""
         temp_paths = []
         check_paths = []
         continues = False
@@ -218,37 +222,3 @@ class Graph():
             all_neighbor_info = dict(zip(neighbor_labels_decoded, neighbor_lengths))
             returned_string += f"{vertice}   {all_neighbor_info}\n"
         return returned_string
-
-
-g = Graph()
-
-g.add_vertex("A")
-g.add_vertex("B")
-g.add_vertex("C")
-g.add_vertex("D")
-g.add_vertex("E")
-g.add_vertex("F")
-
-g.add_edge("A", "B", 2.0)
-g.add_edge("A", "F", 9.0)
-
-g.add_edge("B", "F", 6.0)
-g.add_edge("B", "D", 15.0)
-g.add_edge("B", "C", 8.0)
-
-g.add_edge("C", "D", 1.0)
-
-g.add_edge("E", "C", 7.0)
-g.add_edge("E", "D", 3.0)
-
-g.add_edge("F", "E", 3.0)
-# g.add_edge("A", "B", 1.0)
-# g.add_edge("A", "C", 1.0)
-#
-# g.add_edge("B", "D", 1.0)
-#
-# g.add_edge("C", "E", 1.0)
-#
-# g.add_edge("E", "F", 1.0)
-print(g.dijkstra_shortest_path("F"))
-
