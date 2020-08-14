@@ -121,16 +121,55 @@ class Graph():
         for item in list(all_edges.keys()):
             matrix[coded[item[0]]][coded[item[1]]] = all_edges[item]
         print(all_paths)
-        self.dij(coded[src], matrix, all_paths, dest)
+        if dest:
+            letter_path = self.dij(coded[src], matrix, all_paths, dest)
+            return (all_paths[dest], letter_path)
+        else:
+            for item in self.vertices.keys():
+                no_dest[item] = (all_paths[item])
+
+
+
+
+    def clean(self, lyst, dest):
+        coded = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5}
+        desti = coded[dest]
+        cleaned = []
+        for item in lyst:
+            if item[-1] == desti:
+                cleaned.append(item)
+        return cleaned
+
+    def letter_path(self, lyst, dest, low_num):
+        coded = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5}
+        back_coded = {0: "A", 1: "B", 2: "C", 3: "D", 4: "E", 5: "F"}
+        edges = self.get_all_edges()
+        for path in lyst:
+            count = 0
+            i = 0
+            j = 1
+            for x in path[:-1]:
+                count += edges[(back_coded[path[i]], back_coded[path[j]])]
+                i += 1
+                j += 1
+            if count == low_num:
+                letters = [back_coded[x] for x in path]
+                letters.reverse()
+                return letters
+
 
     def dij(self, src, matrix, all_paths, dest):
         paths = []
+        coded = {"A": 0, "B": 1, "C": 2, "D": 3, "E": 4, "F": 5}
         for item in matrix[src]:
             if item > 0:
                 paths.append([src, matrix[src].index(item)])
-        print(matrix)
-        cool_paths = self.recurse(matrix, paths)
-
+        rough =[]
+        for item in self.recurse(matrix, paths):
+            rough.append(item)
+        all_possible_paths = self.clean(rough, dest)
+        letters = self.letter_path(all_possible_paths, dest, all_paths[dest])
+        return letters
 
     def recurse(self, matrix, paths, check=[]):
         temp_paths = []
@@ -149,9 +188,8 @@ class Graph():
                     temp_list.append(matrix[item[-1]].index(x))
                     check_paths.append(temp_list)
                     continues = True
-        print(f"Temp Paths {temp_paths}")
         if continues:
-            self.recurse(matrix, check_paths, temp_paths)
+            return self.recurse(matrix, check_paths, temp_paths)
         else:
             return temp_paths
 
@@ -207,5 +245,5 @@ g.add_edge("F", "E", 3)
 # g.add_edge("C", "E", 1.0)
 #
 # g.add_edge("E", "F", 1.0)
-print(g.dijkstra_shortest_path("A"))
+print(g.dijkstra_shortest_path("A", "B"))
 #print(g.get_all_edges())
